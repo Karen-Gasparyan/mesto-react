@@ -1,12 +1,18 @@
 import React from 'react';
 
-function PopupWithForm({title, name, children, isOpen, onClose}) {
+function PopupWithForm({title, name, buttonText,  children, isOpen, onClose}) {
   return(
-    <div className={`pop-up pop-up_${name} ${isOpen}`}>
+    <div className={`pop-up pop-up_${name} ${isOpen ? 'pop-up_opened' : ''}`}>
         <div className="pop-up__container">
           <form className="pop-up__form" name={name} noValidate>
             <h2 className="pop-up__title">{title}</h2>
             {children}
+            <button
+              type="submit"
+              aria-label="Кнопка отправки формы"
+              className="pop-up__save-btn"
+            >{buttonText}
+            </button>
           </form>
           <button
             type="button"
@@ -14,7 +20,8 @@ function PopupWithForm({title, name, children, isOpen, onClose}) {
             title="Закрыть"
             className="pop-up__close-btn"
             onClick={onClose}
-          ></button>
+          >
+          </button>
       </div>
   </div>
   )

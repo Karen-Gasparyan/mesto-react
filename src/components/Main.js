@@ -20,12 +20,19 @@ function Main({
         setUserName(name);
         setUserDescription(about);
         setUserAvatar(avatar);
+      })
+      .catch(error => {
+        setUserName(error);
+        setUserDescription('Something went wrong');
+        setUserAvatar('https://www.wpfixit.com/wp-content/uploads/2019/03/HTTP-error-when-uploading-images-in-WordPress.jpg');
       });
   }, []);
 
   useEffect(()=> {
     api.getInitialCards()
-      .then(data => setCards(data));
+      .then(data => setCards(data))
+      .catch(error => document.querySelector('.elements')
+        .textContent = `${error} - Something went wrong`);
   }, []);
 
   return (
@@ -63,7 +70,9 @@ function Main({
       <section
         className="elements content__elements"
         aria-label="Карточки, с фотографиями мест">
-          {cards.map(({_id, ...otherValues})=> <Card key={_id} {...otherValues} onCardClick={onCardClick} />)}
+          {cards.map(({_id, ...otherValues})=>
+            (<Card key={_id} {...otherValues} onCardClick={onCardClick} />)
+          )}
       </section>
     </div>
   );

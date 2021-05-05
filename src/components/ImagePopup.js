@@ -1,9 +1,9 @@
 import React from 'react';
 
-function ImagePopup({card: {clazz, name, link}, onClose}) {
+function ImagePopup({card: {isOpen, name, link}, onClose}) {
 
   return (
-    <div className={`pop-up pop-up_fullscreen ${clazz}`}>
+    <div className={`pop-up pop-up_fullscreen ${isOpen ? 'pop-up_opened' : ''}`}>
       <div className="pop-up__container-fullscreen">
         <img
           src={link}

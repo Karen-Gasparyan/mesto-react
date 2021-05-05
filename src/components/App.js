@@ -15,20 +15,20 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
 
   const handleEditAvatarClick =()=> {
-    setIsEditAvatarPopupOpen('pop-up_opened');
+    setIsEditAvatarPopupOpen(true);
   }
 
   const handleEditProfileClick =()=> {
-    setIsEditProfilePopupOpen('pop-up_opened');
+    setIsEditProfilePopupOpen(true);
   }
 
   const handleAddPlaceClick =()=> {
-    setIsAddPlacePopupOpen('pop-up_opened');
+    setIsAddPlacePopupOpen(true);
   }
 
   const handleCardClick =(name, link)=> {
     setSelectedCard({
-      clazz: 'pop-up_opened',
+      isOpen: true,
       name,
       link
     });
@@ -59,6 +59,7 @@ function App() {
         <PopupWithForm
           title={'Обновить аватар'}
           name={'change-avatar'}
+          buttonText={'Сохранить'}
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           >
@@ -74,12 +75,12 @@ function App() {
               />
               <span id="linkToAvatar-error" className="error"></span>
             </div>
-            <button type="submit" className="pop-up__save-btn">Сохранить</button>
         </PopupWithForm>
 
         <PopupWithForm
           title={'Редактировать профиль'}
           name={'edit'}
+          buttonText={'Сохранить'}
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           >
@@ -111,12 +112,12 @@ function App() {
               />
               <span id="userAbout-error" className="error"></span>
             </div>
-            <button type="submit" className="pop-up__save-btn">Сохранить</button>
         </PopupWithForm>
 
         <PopupWithForm
           title={'Новое место'}
           name={'img'}
+          buttonText={'Создать'}
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           >
@@ -146,7 +147,6 @@ function App() {
               />
               <span id="linkToImage-error" className="error"></span>
             </div>
-            <button type="submit" className="pop-up__save-btn">Создать</button>
         </PopupWithForm>
 
         <Footer />
