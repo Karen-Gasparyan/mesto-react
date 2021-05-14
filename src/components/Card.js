@@ -1,6 +1,15 @@
 import React from 'react';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
-function Card({name, link, likes, onCardClick}) {
+
+function Card({name, link, likes, owner, onCardClick}) {
+  
+  const currentUser = React.useContext(CurrentUserContext);
+
+  const isOwn = owner._id === currentUser._id;
+  const cardDeleteButtonClassName = (
+    `element__deleted ${isOwn ? 'element__deleted_active' : ''}`
+  );
 
   const handleClick =()=> {
     onCardClick(name, link);
@@ -11,13 +20,14 @@ function Card({name, link, likes, onCardClick}) {
       <img
         src={link}
         alt={name}
+        onError={(e)=> e.target.src = 'https://user-images.githubusercontent.com/24848110/33519396-7e56363c-d79d-11e7-969b-09782f5ccbab.png'}
         className="element__image"
         onClick={handleClick} />
       <button
         type="button"
         aria-label="Кнопка удаления карточки"
         title="Удалить"
-        className="element__deleted">
+        className={cardDeleteButtonClassName}>
       </button>
       <div className="element__description-wrapper">
         <h2 className="element__title">{name}</h2>

@@ -1,38 +1,26 @@
 import React, {useState, useEffect} from 'react';
-import api from '../utils/api';
+
 import Card from './Card';
+import CurrentUserContext from '../contexts/CurrentUserContext';
+import api from '../utils/api';
 
 function Main({
   onEditAvatar,
   onEditProfile,
   onAddPlace,
   onCardClick
-}) {
-
-  const [userName, setUserName] = useState();
-  const [userDescription, setUserDescription] = useState();
-  const [userAvatar, setUserAvatar] = useState();
+})
+{
   const [cards, setCards] = useState([]);
-  
-  useEffect(()=> {
-    api.getUserInfo()
-      .then(({name, about, avatar})=> {
-        setUserName(name);
-        setUserDescription(about);
-        setUserAvatar(avatar);
-      })
-      .catch(error => {
-        setUserName(error);
-        setUserDescription('Something went wrong');
-        setUserAvatar('https://www.wpfixit.com/wp-content/uploads/2019/03/HTTP-error-when-uploading-images-in-WordPress.jpg');
-      });
-  }, []);
+  const [cardsError, setCardsError] = useState(null);
+
+  const currentUser = React.useContext(CurrentUserContext);
+  const {name, about, avatar} = currentUser;
 
   useEffect(()=> {
     api.getInitialCards()
       .then(data => setCards(data))
-      .catch(error => document.querySelector('.elements')
-        .textContent = `${error} - Something went wrong`);
+      .catch(error => setCardsError(`${error} - Something went wrong`));
   }, []);
 
   return (
@@ -41,7 +29,7 @@ function Main({
         <div className="profile__wrapper">
           <div className="profile__avatar-wrapper">
             <img
-              src={userAvatar}
+              src={avatar}
               alt="Аватар"
               className="profile__avatar" />
             <div
@@ -50,14 +38,14 @@ function Main({
             </div>
           </div>
           <div className="profile__info">
-            <h1 className="profile__title">{userName}</h1>
+            <h1 className="profile__title">{name}</h1>
             <button
               type="button"
               className="profile__edit-button"
               aria-label="Кнопка - редактировать профиль"
               onClick={onEditProfile}
             ></button>
-            <p className="profile__subtitile">{userDescription}</p>
+            <p className="profile__subtitile">{about}</p>
           </div>
         </div>
         <button
@@ -69,8 +57,8 @@ function Main({
       </section>
       <section
         className="elements content__elements"
-        aria-label="Карточки, с фотографиями мест">
-          {cards.map(({_id, ...otherValues})=>
+        aria-label="Карточки, с фотографиями мест" >
+          {cardsError || cards.map(({_id, ...otherValues})=>
             (<Card key={_id} {...otherValues} onCardClick={onCardClick} />)
           )}
       </section>
