@@ -68,24 +68,24 @@ class Api {
     .then(this._checkResponse)
   }
 
-  setLike(id) {
-    return fetch(`${this._url}cards/likes/${id}`, {
+  changeLike(id, isLiked) {
+    if(isLiked) {
+      return fetch(`${this._url}cards/likes/${id}`, {
       method: 'PUT',
       headers: this._headers,
       body: JSON.stringify({ _id: id })
     })
-    .then(this._checkResponse)
+      .then(this._checkResponse)
+    } else {
+        return fetch(`${this._url}cards/likes/${id}`, {
+          method: 'DELETE',
+          headers: this._headers,
+          body: JSON.stringify({ _id: id })
+        })
+          .then(this._checkResponse)
+    }
   }
-
-  deleteLike(id) {
-    return fetch(`${this._url}cards/likes/${id}`, {
-      method: 'DELETE',
-      headers: this._headers,
-      body: JSON.stringify({ _id: id })
-    })
-    .then(this._checkResponse)
-  }
-  /* SET */
+  /* /SET */
 }
 
 const api = new Api({

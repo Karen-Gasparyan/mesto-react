@@ -9,19 +9,30 @@ function Main({
   onEditProfile,
   onAddPlace,
   onCardClick
-})
-{
+}) {
   const [cards, setCards] = useState([]);
   const [cardsError, setCardsError] = useState(null);
 
   const currentUser = React.useContext(CurrentUserContext);
   const {name, about, avatar} = currentUser;
 
+
   useEffect(()=> {
     api.getInitialCards()
       .then(data => setCards(data))
       .catch(error => setCardsError(`${error} - Something went wrong`));
   }, []);
+
+
+  function handleCardLike(selectedСardLikes, selectedСardID) {
+    const isLiked = selectedСardLikes.some(otherUsers => otherUsers._id === currentUser._id);
+    
+    api.changeLike(selectedСardID, !isLiked)
+      .then(selectedСard => {
+        setCards(allCards => allCards.map(card => card._id === selectedСardID ? selectedСard : card));
+    });
+  }
+
 
   return (
     <div className="content page__content">
@@ -58,8 +69,12 @@ function Main({
       <section
         className="elements content__elements"
         aria-label="Карточки, с фотографиями мест" >
-          {cardsError || cards.map(({_id, ...otherValues})=>
-            (<Card key={_id} {...otherValues} onCardClick={onCardClick} />)
+          {cardsError || cards.map((values)=>
+            (<Card
+                key={values._id}
+                cardValues={values}
+                onCardLike={handleCardLike}
+                onCardClick={onCardClick} />)
           )}
       </section>
     </div>

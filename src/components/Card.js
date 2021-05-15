@@ -2,18 +2,24 @@ import React from 'react';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
 
-function Card({name, link, likes, owner, onCardClick}) {
-  
+function Card({cardValues, onCardLike, onCardClick}) {
+  const {name, link, likes, owner, _id} = cardValues;
+
   const currentUser = React.useContext(CurrentUserContext);
 
   const isOwn = owner._id === currentUser._id;
-  const cardDeleteButtonClassName = (
-    `element__deleted ${isOwn ? 'element__deleted_active' : ''}`
-  );
+  const cardDeleteButtonClassName = `element__deleted ${isOwn ? 'element__deleted_active' : ''}`;
+
+  const isLiked = likes.some(other => other._id === currentUser._id);
+  const cardLikeButtonClassName = `element__like ${isLiked ? 'element__like_active' : ''}`; 
 
   const handleClick =()=> {
     onCardClick(name, link);
-  } 
+  }
+
+  const handleLikeClick =()=> {
+    onCardLike(likes, _id);
+  }
 
   return (
     <article className="element">
@@ -36,7 +42,8 @@ function Card({name, link, likes, owner, onCardClick}) {
             type="button"
             aria-label="Кнопка с отметкой - нравится"
             title="Нравится"
-            className="element__like">
+            className={cardLikeButtonClassName}
+            onClick={handleLikeClick}>
           </button>
           <p className="element__of-number-likes">{likes.length}</p>
         </div>
