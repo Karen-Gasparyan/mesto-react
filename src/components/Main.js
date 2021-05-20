@@ -1,38 +1,21 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 
 import Card from './Card';
 import CurrentUserContext from '../contexts/CurrentUserContext';
-import api from '../utils/api';
+
 
 function Main({
   onEditAvatar,
   onEditProfile,
   onAddPlace,
-  onCardClick
+  onCardClick,
+  cards,
+  cardsError,
+  onCardLike,
+  onCardDelete
 }) {
-  const [cards, setCards] = useState([]);
-  const [cardsError, setCardsError] = useState(null);
-
   const currentUser = React.useContext(CurrentUserContext);
   const {name, about, avatar} = currentUser;
-
-
-  useEffect(()=> {
-    api.getInitialCards()
-      .then(data => setCards(data))
-      .catch(error => setCardsError(`${error} - Something went wrong`));
-  }, []);
-
-
-  function handleCardLike(selectedСardLikes, selectedСardID) {
-    const isLiked = selectedСardLikes.some(otherUsers => otherUsers._id === currentUser._id);
-    
-    api.changeLike(selectedСardID, !isLiked)
-      .then(selectedСard => {
-        setCards(allCards => allCards.map(card => card._id === selectedСardID ? selectedСard : card));
-    });
-  }
-
 
   return (
     <div className="content page__content">
@@ -73,8 +56,9 @@ function Main({
             (<Card
                 key={values._id}
                 cardValues={values}
-                onCardLike={handleCardLike}
-                onCardClick={onCardClick} />)
+                onCardClick={onCardClick}
+                onCardLike={onCardLike}
+                onCardDelete={onCardDelete} />)
           )}
       </section>
     </div>

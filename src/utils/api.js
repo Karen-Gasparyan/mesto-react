@@ -2,7 +2,7 @@ class Api {
   constructor(config) {
     this._url = config.url;
     this._headers = config.headers;
-  }
+  };
 
   _checkResponse(res) {
     if (res.ok) {
@@ -10,7 +10,7 @@ class Api {
     } else {
       return Promise.reject(`Error: ${res.status}`);
     }
-  }
+  };
 
   /* GET */
   getInitialCards() {
@@ -19,7 +19,7 @@ class Api {
       headers: this._headers
     })
     .then(this._checkResponse)
-  }
+  };
 
   getUserInfo() {
     return fetch(`${this._url}users/me`, {
@@ -27,7 +27,7 @@ class Api {
       headers: this._headers
     })
     .then(this._checkResponse)
-  }
+  };
   /* /GET */
 
 
@@ -39,7 +39,7 @@ class Api {
       body: JSON.stringify({ avatar: link })
     })
     .then(this._checkResponse)
-  }
+  };
 
   setUserInfo(name, about) {
     return fetch(`${this._url}users/me`, {
@@ -48,7 +48,7 @@ class Api {
       body: JSON.stringify({ name, about })
     })
     .then(this._checkResponse)
-  }
+  };
 
   setNewCard(data) {
     return fetch(`${this._url}cards`, {
@@ -57,7 +57,7 @@ class Api {
       body: JSON.stringify(data)
     })
     .then(this._checkResponse)
-  }
+  };
 
   deleteCard(id) {
     return fetch(`${this._url}cards/${id}`, {
@@ -66,7 +66,7 @@ class Api {
       body: JSON.stringify({ _id: id })
     })
     .then(this._checkResponse)
-  }
+  };
 
   changeLike(id, isLiked) {
     if(isLiked) {
@@ -86,12 +86,12 @@ class Api {
     }
   }
   /* /SET */
-}
+};
 
 const api = new Api({
-  url: 'https://mesto.nomoreparties.co/v1/cohort-20/',
+  url: 'https://mesto.nomoreparties.co/v1/cohort-22/',
   headers: {
-    authorization: 'e4e57aba-b1e6-4fc1-8294-ad6d7d0fcf8d',
+    authorization: 'fc55fa6a-67b0-4119-9d98-e2f765087414',
     'Content-Type': 'application/json; charset=UTF-8'
   }
 });
