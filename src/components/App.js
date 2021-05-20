@@ -8,6 +8,7 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
+import MessagePopup from './MessagePopup';
 
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import api from '../utils/api';
@@ -17,8 +18,10 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState({});
+  const [isMessagePopup, setIsMessagePopup] = useState(false);
+
   const [currentUser, setCurrentUser ] = useState({});
+  const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const [cardsError, setCardsError] = useState(null);
 
@@ -43,7 +46,7 @@ function App() {
     api.deleteCard(selectedСardID)
       .then(({message}) => {
         setCards(allCards => allCards.filter(card => card._id !== selectedСardID));
-        console.log(message);
+        if(message) return handleMessagePopup();
       })
   };
 
@@ -108,6 +111,16 @@ function App() {
     setIsAddPlacePopupOpen(true);
   };
 
+  const handleMessagePopup =()=> {
+    setIsMessagePopup(true);
+
+    const hideMessage =()=> {
+      setIsMessagePopup(false);
+    }
+
+    setTimeout(hideMessage, 1000);
+  }
+
   const handleCardClick =(name, link)=> {
     setSelectedCard({
       isOpen: true,
@@ -159,6 +172,10 @@ function App() {
           <ImagePopup
             card={selectedCard}
             onClose={closeAllPopups} />
+
+          <MessagePopup
+            title={'Пост успешно удален'}
+            isOpen={isMessagePopup}/>
 
           <Footer />
         </div>
