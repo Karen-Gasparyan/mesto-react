@@ -1,4 +1,6 @@
 .pop-up__save-btn {
+  display: flex;
+  justify-content: center;
   border: none;
   outline: none;
   padding: 0;
@@ -10,7 +12,8 @@
   font-size: 14px;
   line-height: 17px;
   text-align: center;
-  color: #FFF;
+  align-items: center;
+  color: #fff;
   transition: .8s;
   cursor: pointer;
 }
