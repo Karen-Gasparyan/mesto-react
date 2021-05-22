@@ -4,7 +4,16 @@ import SpinnerContext from '../contexts/SpinnerContext';
 import Spinner from './spinner/Spinner';
 
 
-function PopupWithForm({title, name, buttonText,  children, isOpen, onClose, onSubmit}) {
+function PopupWithForm({
+  title,
+  name,
+  buttonText, 
+  children,
+  isOpen,
+  onClose,
+  onSubmit,
+  submitButtonValidation
+}) {
 
   const spinner = React.useContext(SpinnerContext);
 
@@ -21,7 +30,8 @@ function PopupWithForm({title, name, buttonText,  children, isOpen, onClose, onS
             <button
               type="submit"
               aria-label="Кнопка отправки формы"
-              className="pop-up__save-btn" >
+              className={`pop-up__save-btn ${!submitButtonValidation ? 'pop-up__save-btn_invalid' : '' }`}
+              disabled={!submitButtonValidation} >
               {buttonText}
               {spinner ? <Spinner /> : null}
             </button>

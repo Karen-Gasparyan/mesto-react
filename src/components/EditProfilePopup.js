@@ -5,24 +5,62 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 import PopupWithForm from './PopupWithForm';
 
 
-function EditProfilePopup({isOpen, onClose, onUpdateUser, buttonTextProfilePopup}) {
+function EditProfilePopup({
+  isOpen,
+  onClose,
+  onUpdateUser,
+  buttonTextProfilePopup}) {
 
   const currentUser = React.useContext(CurrentUserContext);
 
   const [userName, setUserName] = useState('');
   const [userDescription, setUserDescription] = useState('');
+  const [userNameError, setUserNameError] = useState('');
+  const [userDescriptionError, setUserDescriptionError] = useState('');
+
+  const [userInfoDirty, setUserInfoDirty] = useState(false);
+  const [validForm, setValidForm] = useState(false);
+
 
   useEffect(()=> {
     setUserName(currentUser.name);
     setUserDescription(currentUser.about);
   }, [currentUser]);
 
+
+  useEffect(()=> {
+    if(userNameError || userDescriptionError) {
+      setValidForm(false);
+    } else {
+      setValidForm(true);
+    }
+  }, [userNameError, userDescriptionError])
+
+
   function handleChangeName(e) {
     setUserName(e.target.value);
+
+    if(e.target.value.length < 2 || e.target.value.length >= 20) {
+      setUserNameError('Имя не может содержать менее 2 и более 20 символов');
+      setUserInfoDirty(true);
+    } else {
+      setUserNameError('');
+    }
   };
+
+
   function handleChangeDescription(e) {
     setUserDescription(e.target.value);
+
+    if(e.target.value.length < 2 || e.target.value.length >= 200) {
+      setUserDescriptionError('Поле не может содержать менее 2 и более 200 символов');
+      setUserInfoDirty(true);
+    } else {
+      setUserDescriptionError('');
+    }
   };
+
+
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -32,6 +70,16 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser, buttonTextProfilePopup
     });
   };
 
+
+  function blurHandler(e) {
+    if (!e.target.value && e.target.name === 'userName') {
+      setUserNameError('Поле не может быть пустым');
+    } else if (!e.target.value && e.target.name === 'userAbout') {
+      setUserDescriptionError('Поле не может быть пустым');
+    }
+  };
+
+
   return (
     <PopupWithForm
       title={'Редактировать профиль'}
@@ -39,26 +87,28 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser, buttonTextProfilePopup
       buttonText={buttonTextProfilePopup}
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit}>
+      onSubmit={handleSubmit}
+      submitButtonValidation={validForm} >
         <div className="pop-up__input-wrapper">
           <input
             name="userName"
+            value={userName}
             required
             minLength="2"
-            maxLength="40"
+            maxLength="20"
             autoComplete="off"
             placeholder="Введите ваше имя"
             type="text"
             className="pop-up__input-text pop-up__input-text_type_name"
             id="userName"
-            value={userName}
             onChange={handleChangeName}
-          />
-          <span id="userName-error" className="error"></span>
+            onBlur={blurHandler} />
+          {(userInfoDirty && userNameError) && <span id="userName-error" className="error">{userNameError}</span> }
         </div>
         <div className="pop-up__input-wrapper">
           <input
             name="userAbout"
+            value={userDescription}
             required
             minLength="2"
             maxLength="200"
@@ -67,10 +117,9 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser, buttonTextProfilePopup
             type="text"
             className="pop-up__input-text pop-up__input-text_type_about"
             id="userAbout"
-            value={userDescription}
             onChange={handleChangeDescription}
-          />
-          <span id="userAbout-error" className="error"></span>
+            onBlur={blurHandler} />
+          {(userInfoDirty && userDescriptionError) && <span id="userAbout-error" className="error">{userDescriptionError}</span> }
         </div>
     </PopupWithForm>
   );

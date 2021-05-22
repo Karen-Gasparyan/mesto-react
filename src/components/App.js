@@ -188,19 +188,22 @@ function App() {
               isOpen={isEditAvatarPopupOpen}
               onClose={closeAllPopups}
               onUpdateAvatar={handleUpdateAvatar}
-              buttonTextAvatarPopup={buttonTextAvatarPopup} />
+              buttonTextAvatarPopup={buttonTextAvatarPopup}
+               />
             
             <EditProfilePopup
               isOpen={isEditProfilePopupOpen}
               onClose={closeAllPopups}
               onUpdateUser={handleUpdateUser}
-              buttonTextProfilePopup={buttonTextProfilePopup} /> 
+              buttonTextProfilePopup={buttonTextProfilePopup}
+               /> 
 
             <AddPlacePopup
               isOpen={isAddPlacePopupOpen}
               onClose={closeAllPopups}
               onAddPlace={handleAddPlaceSubmit}
-              buttonTextPlacePopup={buttonTextPlacePopup} />
+              buttonTextPlacePopup={buttonTextPlacePopup}
+               />
 
             <ImagePopup
               card={selectedCard}
