@@ -16,21 +16,20 @@ import api from '../utils/api';
 
 
 function App() {
+
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isMessagePopup, setIsMessagePopup] = useState(false);
 
-  const [currentUser, setCurrentUser ] = useState({});
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const [cardsError, setCardsError] = useState(null);
+
+  const [resetForms, setResetForms] = useState(false);
+  const [currentUser, setCurrentUser ] = useState({});
   const [loading, setLoading] = useState(false);
   const [messageText, setMessageText] = useState('');
-
-  const [buttonTextProfilePopup, setButtonTextProfilePopup] = useState('Сохранить');
-  const [buttonTextAvatarPopup, setButtonTextAvatarPopup] = useState('Сохранить');
-  const [buttonTextPlacePopup, setButtonTextPlacePopup] = useState('Создать');
 
 
   /* cards */
@@ -39,6 +38,7 @@ function App() {
       .then(data => setCards(data))
       .catch(error => setCardsError(`${error} - Something went wrong`));
   }, []);
+
 
   function handleCardLike(selectedСardLikes, selectedСardID) {
     const isLiked = selectedСardLikes.some(otherUsers => otherUsers._id === currentUser._id);
@@ -50,6 +50,7 @@ function App() {
     .catch(error => handleMessagePopup(`Something went wrong - ${error}`));
   };
 
+
   function handleCardDelete(selectedСardID) {
     api.deleteCard(selectedСardID)
       .then(postDeleted => {
@@ -59,18 +60,20 @@ function App() {
       .catch(error => handleMessagePopup(`Something went wrong - ${error}`));
   };
 
+
   function handleAddPlaceSubmit(newPlaceData) {
-    setButtonTextPlacePopup('Сохранение...');
     setLoading(true);
 
     api.setNewCard(newPlaceData)
       .then(newCard => {
         setCards([newCard, ...cards]);
-        setButtonTextPlacePopup('Создать');
         setLoading(false);
         closeAllPopups();
       })
-      .catch(error => setButtonTextPlacePopup(error));
+      .catch(error => {
+        handleMessagePopup(`Something went wrong - ${error}`);
+        setLoading(false);
+      });
   };
   /* /cards */
 
@@ -90,32 +93,36 @@ function App() {
       });
   }, []);
 
+
   function handleUpdateAvatar(link) {
-    setButtonTextAvatarPopup('Сохранение...');
     setLoading(true);
 
     api.setUserAvatar(link)
       .then(newData => {
         setCurrentUser(newData);
-        setButtonTextAvatarPopup('Сохранить');
         setLoading(false);
         closeAllPopups();
       })
-      .catch(error => setButtonTextAvatarPopup(error));
+      .catch(error => {
+        handleMessagePopup(`Something went wrong - ${error}`);
+        setLoading(false);
+      });
   };
 
+
   function handleUpdateUser({userName, about}) {
-    setButtonTextProfilePopup('Сохранение...');
     setLoading(true);
 
     api.setUserInfo(userName, about)
       .then(newData => {
         setCurrentUser(newData);
-        setButtonTextProfilePopup('Сохранить');
         setLoading(false);
         closeAllPopups();
       })
-      .catch(error => setButtonTextProfilePopup(error));
+      .catch(error => {
+        handleMessagePopup(`Something went wrong - ${error}`);
+        setLoading(false);
+      });
   };
   /* /user info */
 
@@ -123,14 +130,17 @@ function App() {
   /* popup's */
   const handleEditAvatarClick =()=> {
     setIsEditAvatarPopupOpen(true);
+    setResetForms(false);
   };
 
   const handleEditProfileClick =()=> {
     setIsEditProfilePopupOpen(true);
+    setResetForms(false);
   };
 
   const handleAddPlaceClick =()=> {
     setIsAddPlacePopupOpen(true);
+    setResetForms(false);
   };
 
   const handleMessagePopup =(message)=> {
@@ -141,7 +151,7 @@ function App() {
       setIsMessagePopup(false);
     }
 
-    setTimeout(hideMessage, 1000);
+    setTimeout(hideMessage, 1500);
   }
 
   const handleCardClick =(name, link)=> {
@@ -156,16 +166,12 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+
     setSelectedCard({});
-
-    setButtonTextAvatarPopup('Сохранить')
-    setButtonTextProfilePopup('Сохранить');
-    setButtonTextPlacePopup('Создать')
-
     setLoading(false);
+    setResetForms(true);
   };
   /* /popup's */
-
 
   return (
     <SpinnerContext.Provider value={loading} >
@@ -188,22 +194,22 @@ function App() {
               isOpen={isEditAvatarPopupOpen}
               onClose={closeAllPopups}
               onUpdateAvatar={handleUpdateAvatar}
-              buttonTextAvatarPopup={buttonTextAvatarPopup}
-               />
+              loading={loading}
+              resetForms={resetForms} />
             
             <EditProfilePopup
               isOpen={isEditProfilePopupOpen}
               onClose={closeAllPopups}
               onUpdateUser={handleUpdateUser}
-              buttonTextProfilePopup={buttonTextProfilePopup}
-               /> 
+              loading={loading}
+              resetForms={resetForms} /> 
 
             <AddPlacePopup
               isOpen={isAddPlacePopupOpen}
               onClose={closeAllPopups}
               onAddPlace={handleAddPlaceSubmit}
-              buttonTextPlacePopup={buttonTextPlacePopup}
-               />
+              loading={loading}
+              resetForms={resetForms} />
 
             <ImagePopup
               card={selectedCard}

@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react';
 
 import PopupWithForm from './PopupWithForm';
 
+
 function AddPlacePopup({
   isOpen,
   onClose,
   onAddPlace,
-  buttonTextPlacePopup
+  loading,
+  resetForms
 }) {
-
   const [name, setName] = useState('');
   const [link, setLink] = useState('');
+
+              /*        Спасибо за отличное ревью! За замечание по поводу валидации.
+                        Разберусь с ней чуть позже, иначе ничего не успею ;).          */
 
   const [placeNameError, setPlaceNameError] = useState('');
   const [placeLinkError, setPlaceLinkError] = useState('');
@@ -27,6 +31,17 @@ function AddPlacePopup({
     }
   }, [name, link, placeNameError, placeLinkError])
 
+
+  useEffect(()=> {
+    if(resetForms) {
+      setName('');
+      setLink('');
+      setPlaceNameError('');
+      setPlaceLinkError('');
+      setPlaceInfoDirty(false);
+      setValidForm(false);
+    }
+  }, [resetForms])
 
 
   function handleChangePlaceTitle(e) {
@@ -78,7 +93,7 @@ function AddPlacePopup({
     <PopupWithForm
       title={'Новое место'}
       name={'img'}
-      buttonText={buttonTextPlacePopup}
+      buttonText={loading ? 'Создается...' : 'Создать'}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}

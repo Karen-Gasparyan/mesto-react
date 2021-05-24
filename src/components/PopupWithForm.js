@@ -14,7 +14,6 @@ function PopupWithForm({
   onSubmit,
   submitButtonValidation
 }) {
-
   const spinner = React.useContext(SpinnerContext);
 
   return(
