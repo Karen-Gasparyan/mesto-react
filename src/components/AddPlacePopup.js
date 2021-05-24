@@ -33,7 +33,7 @@ function AddPlacePopup({
     setName(e.target.value);
 
     if(e.target.value.length < 2 || e.target.value.length >= 30) {
-      setPlaceNameError('Название не может содержать менее 2 и более 20 символов');
+      setPlaceNameError('Название не может содержать менее 2 и более 30 символов');
       setPlaceInfoDirty(true);
     } else {
       setPlaceNameError('');

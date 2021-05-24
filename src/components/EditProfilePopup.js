@@ -93,7 +93,7 @@ function EditProfilePopup({
         <div className="pop-up__input-wrapper">
           <input
             name="userName"
-            value={userName}
+            value={userName || ''}
             required
             minLength="2"
             maxLength="20"
@@ -109,7 +109,7 @@ function EditProfilePopup({
         <div className="pop-up__input-wrapper">
           <input
             name="userAbout"
-            value={userDescription}
+            value={userDescription || ''}
             required
             minLength="2"
             maxLength="200"
