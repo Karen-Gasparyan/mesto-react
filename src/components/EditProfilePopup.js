@@ -15,6 +15,7 @@ function EditProfilePopup({
 
   const [userName, setUserName] = useState('');
   const [userDescription, setUserDescription] = useState('');
+  
   const [userNameError, setUserNameError] = useState('');
   const [userDescriptionError, setUserDescriptionError] = useState('');
 
@@ -29,12 +30,12 @@ function EditProfilePopup({
 
 
   useEffect(()=> {
-    if(userNameError || userDescriptionError) {
+    if(!userName || !userDescription || userNameError || userDescriptionError) {
       setValidForm(false);
     } else {
       setValidForm(true);
     }
-  }, [userNameError, userDescriptionError])
+  }, [userName, userDescription, userNameError, userDescriptionError])
 
 
   function handleChangeName(e) {
@@ -60,6 +61,15 @@ function EditProfilePopup({
     }
   };
 
+  
+  function blurHandler(e) {
+    if (!e.target.value && e.target.name === 'userName') {
+      setUserNameError('Поле не может быть пустым');
+    } else if (!e.target.value && e.target.name === 'userAbout') {
+      setUserDescriptionError('Поле не может быть пустым');
+    }
+  };
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -68,15 +78,6 @@ function EditProfilePopup({
       userName,
       about: userDescription,
     });
-  };
-
-
-  function blurHandler(e) {
-    if (!e.target.value && e.target.name === 'userName') {
-      setUserNameError('Поле не может быть пустым');
-    } else if (!e.target.value && e.target.name === 'userAbout') {
-      setUserDescriptionError('Поле не может быть пустым');
-    }
   };
 
 
