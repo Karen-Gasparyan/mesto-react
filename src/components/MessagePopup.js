@@ -1,6 +1,6 @@
 import React from 'react';
 
-function MessagePopup({title, isOpen}) {
+const MessagePopup = React.memo(({title, isOpen}) => {
 
   return (
     <div className={`pop-up ${isOpen ? 'pop-up_opened' : ''}`}>
@@ -13,6 +13,6 @@ function MessagePopup({title, isOpen}) {
       </div>
   </div>
   );
-};
+})
 
 export default MessagePopup;
